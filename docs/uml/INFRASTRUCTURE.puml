@@ -1,0 +1,153 @@
+@startuml
+!theme carbon-gray
+
+!define RECTANGLE component
+
+skinparam linetype polyline
+
+rectangle "Client Layer" {
+  RECTANGLE Client {
+    [Web browser]
+  }
+}
+
+rectangle "Third-Party Layer" {
+  RECTANGLE DNS {
+    [DNS Server]
+  }
+
+  RECTANGLE CDN {
+    [Content Delivery Network (CDN)]
+  }
+
+  RECTANGLE GSLB {
+    [Global Load Balancer (GSLB)]
+  }
+
+  RECTANGLE DataCenterProvider {
+    [External Data Centers]
+  }
+}
+
+rectangle "System Layer" {
+  package "Data Center 1" {
+    RECTANGLE L7_LB_DC1 {
+      [Local Load Balancer (L7)]
+    }
+    RECTANGLE API_Gateway_DC1 {
+      [API Gateway]
+    }
+
+    package "Microservices Layer" {
+      RECTANGLE Service1_DC1 {
+        [Microservice 1]
+      }
+      RECTANGLE Service2_DC1 {
+        [Microservice 2]
+      }
+      RECTANGLE Service3_DC1 {
+        [Microservice 3]
+      }
+    }
+
+    RECTANGLE EventBroker_DC1 {
+      [Event Broker (Kafka/RabbitMQ)]
+    }
+
+    package "Data Layer" {
+      RECTANGLE DB_Service1_DC1 {
+        [DB for Microservice 1]
+      }
+      RECTANGLE DB_Service2_DC1 {
+        [DB for Microservice 2]
+      }
+      RECTANGLE DB_Service3_DC1 {
+        [DB for Microservice 3]
+      }
+      RECTANGLE Cache_DC1 {
+        [Cache (Redis/Memcached)]
+      }
+    }
+  }
+
+  package "Data Center 2" {
+    RECTANGLE L7_LB_DC2 {
+      [Local Load Balancer (L7)]
+    }
+    RECTANGLE API_Gateway_DC2 {
+      [API Gateway]
+    }
+
+    package "Microservices Layer" {
+      RECTANGLE Service1_DC2 {
+        [Microservice 1]
+      }
+      RECTANGLE Service2_DC2 {
+        [Microservice 2]
+      }
+      RECTANGLE Service3_DC2 {
+        [Microservice 3]
+      }
+    }
+    RECTANGLE EventBroker_DC2 {
+      [Event Broker (Kafka/RabbitMQ)]
+    }
+
+    package "Data Layer" {
+      RECTANGLE DB_Service1_DC2 {
+        [DB for Microservice 1]
+      }
+      RECTANGLE DB_Service2_DC2 {
+        [DB for Microservice 2]
+      }
+      RECTANGLE DB_Service3_DC2 {
+        [DB for Microservice 3]
+      }
+      RECTANGLE Cache_DC2 {
+        [Cache (Redis/Memcached)]
+      }
+    }
+  }
+}
+
+rectangle "Monitoring & Logging" {
+  RECTANGLE Monitoring {
+    [Centralized Monitoring]
+  }
+}
+
+Client --> DNS : 1. Request domain
+DNS --> CDN : 2. Resolve domain
+CDN --> GSLB : 3. Redirect to closest data center
+GSLB --> L7_LB_DC1 : 4. Forward request to DC1
+GSLB --> L7_LB_DC2 : 4. Forward request to DC2
+L7_LB_DC1 --> API_Gateway_DC1 : 5. Pass request
+L7_LB_DC2 --> API_Gateway_DC2 : 5. Pass request
+
+API_Gateway_DC1 --> Service1_DC1 : 6. Route to Microservice 1
+API_Gateway_DC1 --> Service2_DC1 : 6. Route to Microservice 2
+API_Gateway_DC1 --> Service3_DC1 : 6. Route to Microservice 3
+
+API_Gateway_DC2 --> Service1_DC2 : 6. Route to Microservice 1
+API_Gateway_DC2 --> Service2_DC2 : 6. Route to Microservice 2
+API_Gateway_DC2 --> Service3_DC2 : 6. Route to Microservice 3
+
+Service1_DC1 --> DB_Service1_DC1 : 7. Query/Update DB
+Service2_DC1 --> DB_Service2_DC1 : 7. Query/Update DB
+Service3_DC1 --> DB_Service3_DC1 : 7. Query/Update DB
+
+Service1_DC2 --> DB_Service1_DC2 : 7. Query/Update DB
+Service2_DC2 --> DB_Service2_DC2 : 7. Query/Update DB
+Service3_DC2 --> DB_Service3_DC2 : 7. Query/Update DB
+
+Service1_DC1 --> EventBroker_DC1 : 8. Publish event
+Service2_DC1 --> EventBroker_DC1 : 8. Publish event
+Service1_DC2 --> EventBroker_DC2 : 8. Publish event
+Service2_DC2 --> EventBroker_DC2 : 8. Publish event
+
+EventBroker_DC1 --> Service3_DC1 : 9. Consume event
+EventBroker_DC2 --> Service3_DC2 : 9. Consume event
+
+Service3_DC1 --> Monitoring : 10. Send logs/metrics
+Service3_DC2 --> Monitoring : 10. Send logs/metrics
+@enduml
