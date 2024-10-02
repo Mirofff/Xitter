@@ -1,4 +1,4 @@
 [submodule "third_party/googleapis"]
 	path = third_party/googleapis
-	url = git@github.com:googleapis/googleapis.git
+	url = https://github.com/googleapis/googleapis.git
 	branch = common-protos-1_3_1
