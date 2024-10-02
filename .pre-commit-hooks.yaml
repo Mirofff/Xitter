@@ -1,0 +1,6 @@
+- id: go-vet
+  name: "go vet"
+  entry: scripts/pre-commit-hooks/go-vet.sh
+  files: '\.go$'
+  language: "script"
+  description: "Runs `go vet`, requires golang"
