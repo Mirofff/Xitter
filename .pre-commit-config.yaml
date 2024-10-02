@@ -30,5 +30,6 @@ repos:
       - id: go-mod-tidy
 
   # - repo: https://github.com/mirofff/xitter-monorepo
+  #   rev: dev
   #   hooks:
   #     - id: go-vet
