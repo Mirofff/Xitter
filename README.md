@@ -5,6 +5,6 @@
 ---
 
 Please, check russian
-language [README](https://github.com/mirofff/xitter-monorepo/blob/main/README.ru.md)
+language [README](./README.ru.md)
 
 ## ...come back soon
